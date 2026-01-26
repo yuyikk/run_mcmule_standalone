@@ -20,57 +20,31 @@ endif()
 find_library(MCMULE_LIBRARIES
     NAMES mcmule
     PATHS ${MCMULE_LIB_PATH}
-    NO_DEFAULT_PATH
     REQUIRED
 )
 
 # --- Find the ROOT library ---
 # It is expected that the ROOTSYS environment variable is set
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} $ENV{ROOTSYS}/etc/cmake)
-find_package(ROOT REQUIRED)
+# set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} $ENV{ROOTSYS}/etc/cmake)
+# find_package(ROOT REQUIRED)
 
 #----------------------------------------------------------------------------
 # Find Source and Header Files
 #----------------------------------------------------------------------------
 
 file(GLOB USER_HEADERS "*.h")
-set (USER_EE_SOURCE "user.cpp")
+set (USER_SOURCE "user.cpp" "io.f95")
 
 #----------------------------------------------------------------------------
 # Define Shared Library Targets
 #----------------------------------------------------------------------------
 
-add_library(user_ee SHARED
-    ${USER_EE_SOURCE}
+add_library(user SHARED
+    ${USER_SOURCE}
     ${USER_HEADERS}
 )
-
-add_library(user_ep SHARED
-    ${USER_EP_SOURCE}
-    ${USER_HEADERS}
-)
-
-add_library(user_convert_from_fortran SHARED
-    ${USER_EP_SOURCE_FROM_FORTRAN}
-    ${USER_HEADERS}
-)
-#----------------------------------------------------------------------------
-# Set Target Properties (Include Directories and Link Libraries)
-#----------------------------------------------------------------------------
-
-# --- Add ROOT's include directory to each target ---
-target_include_directories(user_ee PRIVATE ${ROOT_INCLUDE_DIRS})
-target_include_directories(user_ep PRIVATE ${ROOT_INCLUDE_DIRS})
 
 # --- Link each library against McMule and ROOT ---
-target_link_libraries(user_ee PRIVATE
-    ${MCMULE_LIBRARIES}
-    ${ROOT_LIBRARIES}
-)
-target_link_libraries(user_ep PRIVATE
-    ${MCMULE_LIBRARIES}
-    ${ROOT_LIBRARIES}
-)
-target_link_libraries(user_convert_from_fortran PRIVATE
+target_link_libraries(user PRIVATE
     ${MCMULE_LIBRARIES}
 )

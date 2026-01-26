@@ -82,7 +82,7 @@ extern "C"
         mcmule_protonff_lambda = 0.71e6; // Lambda^2 in MeV
         std::string which_piece(__global_def_MOD_which_piece);
         std::string which_piece_sub = which_piece.substr(0, 5);
-	std::cout << "which_piece_sub: " << which_piece_sub << std::endl;
+        std::cout << "which_piece_sub: " << which_piece_sub << std::endl;
         double s;
         if (process == 0)
         {
@@ -124,7 +124,6 @@ extern "C"
         mo1[3] = (energy * mo1[3] - dot_dot) / mass;
     }
 
-
     void mcmule_measurement_function(double **res, double *p1, double *p2, double *p3, double *p4, double *p5, double *p6, double *p7)
     {
         // This gets called for each event. p1, ..., p7 are pointers
@@ -149,7 +148,6 @@ extern "C"
         double thetay35, cthetay35, thetay36, cthetay36;
         double cone = 6e-3, cone_lim = 20., eytot;
         double th_n, th_w, th_s, th_h, e_s, e_h, e_n, e_w;
-
 
         boost_rf(p2, p1_rest);
         boost_rf(p2, p2_rest);
@@ -283,10 +281,10 @@ extern "C"
             MCMULE_SET_NAME(7, "e_h");
             res[0][7] = e_h;
         }
-	    for (int i = 0; i < mcmule_number_hist; ++i)
-            {
-             	mcmule_pass_cut[i] = pass_cut;
-            }
+        for (int i = 0; i < mcmule_number_hist; ++i)
+        {
+            mcmule_pass_cut[i] = pass_cut;
+        }
     }
 
     void mcmule_user_integration(double *x, int *ndim)
