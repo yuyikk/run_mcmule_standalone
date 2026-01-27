@@ -144,11 +144,6 @@ extern "C"
         // The particles are generated in the CMS frame so we need to
         // perform a boost into the rest-frame of p2
 
-        boost_rf(p2, p3);
-        boost_rf(p2, p4);
-        boost_rf(p2, p5);
-        boost_rf(p2, p6);
-        boost_rf(p2, p7);
         // std::cout << "Boosting to lab frame done" << std::endl;
         double p1_rest[4] = {p1[0], p1[1], p1[2], p1[3]};
         double p2_rest[4] = {p2[0], p2[1], p2[2], p2[3]};
@@ -158,6 +153,13 @@ extern "C"
         double p6_rest[4] = {p6[0], p6[1], p6[2], p6[3]};
         double p7_rest[4] = {p7[0], p7[1], p7[2], p7[3]};
 
+        boost_rf(p2, p1_rest);
+        boost_rf(p2, p2_rest);
+        boost_rf(p2, p3_rest);
+        boost_rf(p2, p4_rest);
+        boost_rf(p2, p5_rest);
+        boost_rf(p2, p6_rest);
+        boost_rf(p2, p7_rest);
 
         MCMULE_SET_NAME(0, "th_l");
 
