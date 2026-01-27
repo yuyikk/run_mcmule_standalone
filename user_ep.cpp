@@ -3,10 +3,11 @@
 #include <iostream>
 #include <cmath>
 #include <random>
-
+#include <iomanip>
 std::random_device rd;
 std::mt19937 gen(rd());
 std::uniform_int_distribution<> dist(0, 100);
+int c = 0;
 extern "C"
 {
     // McMule will calculate this many histograms, cannot be zero but
@@ -76,6 +77,14 @@ extern "C"
 
         // return angle in radians
         return std::acos(cosTheta);
+    }
+    double dot3D(const double *p1, const double *p2)
+    {
+        return p1[0] * p2[0] + p1[1] * p2[1] + p1[2] * p2[2];
+    }
+    double dot4D(const double *p1, const double *p2)
+    {
+        return p1[3] * p2[3] - dot3D(p1, p2);
     }
     // These are random values from fitting the Kelly form factor
     double rational11P = 2.95858e-6;
@@ -166,6 +175,35 @@ extern "C"
         double th_l = angle_between(p1_rest, p3_rest);
         res[0][0] = th_l;
         mcmule_pass_cut[0] = true;
+
+        if (c < 100)
+        {
+            if (c == 0)
+            {
+                std::cout << std::left << std::setw(5) << ""
+                          << std::setw(12) << "Px"
+                          << std::setw(12) << "Py"
+                          << std::setw(12) << "Pz"
+                          << std::setw(12) << "E"
+                          << std::setw(12) << "M" << std::endl;
+            }
+
+            std::cout << std::left << std::setw(5) << "p1: " << std::setw(12) << p1_rest[0]
+                      << std::setw(12) << p1_rest[1] << std::setw(12) << p1_rest[2]
+                      << std::setw(12) << p1_rest[3] << std::setw(12) << std::sqrt(dot4D(p1_rest, p1_rest)) << std::endl;
+            std::cout << std::left << std::setw(5) << "p2: " << std::setw(12) << p2_rest[0]
+                      << std::setw(12) << p2_rest[1] << std::setw(12) << p2_rest[2]
+                      << std::setw(12) << p2_rest[3] << std::setw(12) << std::sqrt(dot4D(p2_rest, p2_rest)) << std::endl;
+            std::cout << std::left << std::setw(5) << "p3: " << std::setw(12) << p3_rest[0]
+                      << std::setw(12) << p3_rest[1] << std::setw(12) << p3_rest[2]
+                      << std::setw(12) << p3_rest[3] << std::setw(12) << std::sqrt(dot4D(p3_rest, p3_rest)) << std::endl;
+            std::cout << std::left << std::setw(5) << "p4: " << std::setw(12) << p4_rest[0]
+                      << std::setw(12) << p4_rest[1] << std::setw(12) << p4_rest[2]
+                      << std::setw(12) << p4_rest[3] << std::setw(12) << std::sqrt(dot4D(p4_rest, p4_rest)) << std::endl;
+            std::cout << std::left << std::setw(15) << "theta_mc: " << std::setw(12) << th_l << std::endl;
+            std::cout << "== == == == == == == == == == == == == == == == == == ==" << std::endl;
+            c++;
+        }
 
         // std::cout << "User measurement function finished" << std::endl;
         // primaryGen->ClearVector();
