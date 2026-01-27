@@ -34,8 +34,9 @@ find_package(ROOT REQUIRED)
 #----------------------------------------------------------------------------
 
 file(GLOB USER_HEADERS "*.h")
-set (USER_EE_SOURCE "user.cpp")
-
+set (USER_EE_SOURCE "user_ep.cpp")
+set (USER_EP_SOURCE "user_ep.cpp")
+set (USER_EP_SOURCE_FROM_FORTRAN "user_convert_from_fortran.cpp")
 #----------------------------------------------------------------------------
 # Define Shared Library Targets
 #----------------------------------------------------------------------------
