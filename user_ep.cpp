@@ -11,15 +11,16 @@ extern "C"
 {
     // McMule will calculate this many histograms, cannot be zero but
     // very large without performance penalty.
+    size_t mcmule_namelen = 10;
     int mcmule_number_hist = 1;
     // The number of bins per histogram. All histograms need to have
     // the same number of bins but not all need to be useful. Can be
     // very large.
-    int mcmule_number_bins = 100;
+    int mcmule_number_bins = 750;
     // This defines the upper and lower bounds of the histograms
     // McMule will compute. Must be set for all histograms requested.
-    double mcmule_lower_bounds[1] = {0.};
-    double mcmule_upper_bounds[1] = {100.};
+    double mcmule_lower_bounds[1] = {0.5};
+    double mcmule_upper_bounds[1] = {8.};
     // McMule will perform this many extra integrations beyond just
     // phase space etc. Useful for hit-and-miss sampling,
     // non-monochromatic beams, random acceptance etc.
@@ -52,7 +53,30 @@ extern "C"
         *Ge = (1 + a11 * tau + a12 * tau2 + a13 * tau3) / (1 + b11 * tau + b12 * tau2 + b13 * tau3 + b14 * tau4 + b15 * tau5);
         *Gm = 2.79284734 * *Ge;
     }
+    double angle_between(const double *a, const double *b)
+    {
+        // dot product of spatial components
+        double dot = a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
 
+        // magnitudes of spatial vectors
+        double magA = std::sqrt(a[0] * a[0] + a[1] * a[1] + a[2] * a[2]);
+        double magB = std::sqrt(b[0] * b[0] + b[1] * b[1] + b[2] * b[2]);
+
+        if (magA == 0.0 || magB == 0.0)
+            return 0.0; // avoid division by zero
+
+        // cosine of the angle
+        double cosTheta = dot / (magA * magB);
+
+        // numerical safeguard (due to floating-point precision)
+        if (cosTheta > 1.0)
+            cosTheta = 1.0;
+        if (cosTheta < -1.0)
+            cosTheta = -1.0;
+
+        // return angle in radians
+        return std::acos(cosTheta);
+    }
     // These are random values from fitting the Kelly form factor
     double rational11P = 2.95858e-6;
     double rational11R = 0.00445253;
@@ -126,26 +150,21 @@ extern "C"
         boost_rf(p2, p6);
         boost_rf(p2, p7);
         // std::cout << "Boosting to lab frame done" << std::endl;
+        double p1_rest[4] = {p1[0], p1[1], p1[2], p1[3]};
+        double p2_rest[4] = {p2[0], p2[1], p2[2], p2[3]};
+        double p3_rest[4] = {p3[0], p3[1], p3[2], p3[3]};
+        double p4_rest[4] = {p4[0], p4[1], p4[2], p4[3]};
+        double p5_rest[4] = {p5[0], p5[1], p5[2], p5[3]};
+        double p6_rest[4] = {p6[0], p6[1], p6[2], p6[3]};
+        double p7_rest[4] = {p7[0], p7[1], p7[2], p7[3]};
 
-        MCMULE_SET_NAME(0, "E");
-	res[0][0] = dist(gen);	
-        if (res[0][0] < 20.)
-        {
-            for (int i = 0; i < mcmule_number_hist; ++i)
-            {
-                mcmule_pass_cut[i] = false;
-            }
-        }
-        else
-        {
-            for (int i = 0; i < mcmule_number_hist; ++i)
-            {
-                mcmule_pass_cut[i] = true;
-            }
-        }
-        
 
-        
+        MCMULE_SET_NAME(0, "th_l");
+
+        double th_l = angle_between(p1_rest, p3_rest);
+        res[0][0] = th_l;
+        mcmule_pass_cut[0] = th_l > 0.5 && th_l < 8;
+
         // std::cout << "User measurement function finished" << std::endl;
         // primaryGen->ClearVector();
     }
