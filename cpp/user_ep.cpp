@@ -4,9 +4,6 @@
 #include <cmath>
 #include <random>
 #include <iomanip>
-std::random_device rd;
-std::mt19937 gen(rd());
-std::uniform_int_distribution<> dist(0, 100);
 int c = 0;
 extern "C"
 {
