@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.10)
-project(user_prad_lib Fortran)
+project(user_ep Fortran)
 
 # Set Fortran standard
 set(CMAKE_Fortran_STANDARD 2008)
@@ -24,6 +24,6 @@ find_library(MCMULE_LIBRARIES
 add_library(user_ep SHARED user_ep.f95)
 
 # Link external shared library if needed
-target_link_libraries(user_prad PRIVATE
+target_link_libraries(user_ep PRIVATE
    ${MCMULE_LIBRARIES}
 )
