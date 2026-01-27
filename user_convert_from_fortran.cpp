@@ -7,6 +7,7 @@ extern "C"
 {
     // McMule will calculate this many histograms, cannot be zero but
     // very large without performance penalty.
+    size_t mcmule_namelen = 10;
     const int mcmule_number_hist = 12;
     // The number of bins per histogram. All histograms need to have
     // the same number of bins but not all need to be useful. Can be
