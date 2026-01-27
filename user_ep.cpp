@@ -163,7 +163,7 @@ extern "C"
 
         double th_l = angle_between(p1_rest, p3_rest);
         res[0][0] = th_l;
-        mcmule_pass_cut[0] = th_l > 0.5 && th_l < 8;
+        mcmule_pass_cut[0] = true;
 
         // std::cout << "User measurement function finished" << std::endl;
         // primaryGen->ClearVector();
