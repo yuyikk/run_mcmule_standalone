@@ -155,10 +155,12 @@ extern "C"
         double p1_rest[4] = {p1[0], p1[1], p1[2], p1[3]};
         double p2_rest[4] = {p2[0], p2[1], p2[2], p2[3]};
         double p3_rest[4] = {p3[0], p3[1], p3[2], p3[3]};
+        double p4_rest[4] = {p4[0], p4[1], p4[2], p4[3]};
 
         boost_rf(p2, p1_rest);
         boost_rf(p2, p2_rest);
         boost_rf(p2, p3_rest);
+        boost_rf(p2, p4_rest);
 
         MCMULE_SET_NAME(0, "th_l");
 
