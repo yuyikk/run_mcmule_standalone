@@ -52,26 +52,23 @@ MODULE USER
     FUNCTION QUANT(q1, q2, q3, q4, q5, q6, q7)
 
         real (kind=prec), intent(in) :: q1(4),q2(4),q3(4),q4(4), q5(4),q6(4),q7(4)
-        real (kind=prec) :: q1Rest(4),q2Rest(4),q3Rest(4),q4Rest(4),q5Rest(4),q6Rest(4)
+        real (kind=prec) :: q1Rest(4),q2Rest(4),q3Rest(4)
         real (kind=prec) :: quant(nrq)
         real (kind=prec) :: th_l
 
         pol1 = (/ 0._prec, 0._prec, 0._prec, 0._prec /)
 
-        pass_cut = .true.
         call FIX_MU
 
         q1Rest = boost_rf(q2,q1)  ! incomping lepton
         q2Rest = boost_rf(q2,q2)  ! lepton/proton at rest
         q3Rest = boost_rf(q2,q3)  ! outgoing lepton
-        q4Rest = boost_rf(q2,q4)  ! recoiling lepton/proton
-        q5Rest = boost_rf(q2,q5)  ! outgoing photon (if present)
-        q6Rest = boost_rf(q2,q6)  ! outgoing photon (if present)
 
         th_l = acos(cos_th(q1Rest, q3Rest)) * deg
 
         names(1) = "th_l"
         quant(1) = th_l
+        pass_cut = .true.
     END FUNCTION QUANT
 
 

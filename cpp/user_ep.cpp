@@ -5,6 +5,7 @@
 #include <random>
 #include <iomanip>
 int c = 0;
+const double deg = 180. / M_PI;
 extern "C"
 {
     // McMule will calculate this many histograms, cannot be zero but
@@ -154,23 +155,15 @@ extern "C"
         double p1_rest[4] = {p1[0], p1[1], p1[2], p1[3]};
         double p2_rest[4] = {p2[0], p2[1], p2[2], p2[3]};
         double p3_rest[4] = {p3[0], p3[1], p3[2], p3[3]};
-        double p4_rest[4] = {p4[0], p4[1], p4[2], p4[3]};
-        double p5_rest[4] = {p5[0], p5[1], p5[2], p5[3]};
-        double p6_rest[4] = {p6[0], p6[1], p6[2], p6[3]};
-        double p7_rest[4] = {p7[0], p7[1], p7[2], p7[3]};
 
         boost_rf(p2, p1_rest);
         boost_rf(p2, p2_rest);
         boost_rf(p2, p3_rest);
-        boost_rf(p2, p4_rest);
-        boost_rf(p2, p5_rest);
-        boost_rf(p2, p6_rest);
-        boost_rf(p2, p7_rest);
 
         MCMULE_SET_NAME(0, "th_l");
 
         double th_l = angle_between(p1_rest, p3_rest);
-        res[0][0] = th_l;
+        res[0][0] = th_l * deg;
         mcmule_pass_cut[0] = true;
 
         if (c < 100)
