@@ -34,44 +34,44 @@ find_package(ROOT REQUIRED)
 #----------------------------------------------------------------------------
 
 file(GLOB USER_HEADERS "*.h")
-set (USER_EE_SOURCE "user_ee.cpp")
+# set (USER_EE_SOURCE "user_ee.cpp")
 set (USER_EP_SOURCE "user_ep.cpp")
-set (USER_EP_SOURCE_FROM_FORTRAN "user_convert_from_fortran.cpp")
+# set (USER_EP_SOURCE_FROM_FORTRAN "user_convert_from_fortran.cpp")
 #----------------------------------------------------------------------------
 # Define Shared Library Targets
 #----------------------------------------------------------------------------
 
-add_library(user_ee SHARED
-    ${USER_EE_SOURCE}
-    ${USER_HEADERS}
-)
+# add_library(user_ee SHARED
+#     ${USER_EE_SOURCE}
+#     ${USER_HEADERS}
+# )
 
 add_library(user_ep SHARED
     ${USER_EP_SOURCE}
     ${USER_HEADERS}
 )
 
-add_library(user_convert_from_fortran SHARED
-    ${USER_EP_SOURCE_FROM_FORTRAN}
-    ${USER_HEADERS}
-)
+# add_library(user_convert_from_fortran SHARED
+#     ${USER_EP_SOURCE_FROM_FORTRAN}
+#     ${USER_HEADERS}
+# )
 #----------------------------------------------------------------------------
 # Set Target Properties (Include Directories and Link Libraries)
 #----------------------------------------------------------------------------
 
 # --- Add ROOT's include directory to each target ---
-target_include_directories(user_ee PRIVATE ${ROOT_INCLUDE_DIRS})
+# target_include_directories(user_ee PRIVATE ${ROOT_INCLUDE_DIRS})
 target_include_directories(user_ep PRIVATE ${ROOT_INCLUDE_DIRS})
 
 # --- Link each library against McMule and ROOT ---
-target_link_libraries(user_ee PRIVATE
-    ${MCMULE_LIBRARIES}
-    ${ROOT_LIBRARIES}
-)
+# target_link_libraries(user_ee PRIVATE
+#     ${MCMULE_LIBRARIES}
+#     ${ROOT_LIBRARIES}
+# )
 target_link_libraries(user_ep PRIVATE
     ${MCMULE_LIBRARIES}
     ${ROOT_LIBRARIES}
 )
-target_link_libraries(user_convert_from_fortran PRIVATE
-    ${MCMULE_LIBRARIES}
-)
+# target_link_libraries(user_convert_from_fortran PRIVATE
+#     ${MCMULE_LIBRARIES}
+# )
