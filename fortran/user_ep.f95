@@ -70,7 +70,11 @@ MODULE USER
         names(1) = "th_l"
         quant(1) = th_l
         print*, th_l
-        pass_cut = .true.
+        if (th_l >= min_val(1) .and. th_l < max_val(1)) then
+            pass_cut = .true.
+        else
+            pass_cut = .false.
+        end if
     END FUNCTION QUANT
 
 
