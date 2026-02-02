@@ -66,8 +66,10 @@ MODULE USER
 
         th_l = acos(cos_th(q1Rest, q3Rest)) * deg
 
+
         names(1) = "th_l"
         quant(1) = th_l
+        print*, th_l
         pass_cut = .true.
     END FUNCTION QUANT
 
