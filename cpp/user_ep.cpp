@@ -102,7 +102,7 @@ extern "C"
         // as Geant4
         double Mel = 0.510998950;    // MeV
         double Mproton = 938.272088; // MeV
-        double Ebeam = 1.1e3;        // MeV
+        double Ebeam = 1101;        // MeV
 
         mcmule_protonff_kappa = 2.79284734;
         mcmule_protonff_lambda = 0.71e6; // Lambda^2 in MeV
