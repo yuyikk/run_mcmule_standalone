@@ -68,7 +68,7 @@ MODULE USER
         q5Rest = boost_rf(q2,q5)  ! outgoing photon (if present)
         q6Rest = boost_rf(q2,q6)  ! outgoing photon (if present)
 
-        th_l = acos(cos_th(q1Rest, q3Rest))
+        th_l = acos(cos_th(q1Rest, q3Rest)) * deg
 
         names(1) = "th_l"
         quant(1) = th_l
