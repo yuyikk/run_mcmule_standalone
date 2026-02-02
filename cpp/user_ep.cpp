@@ -164,7 +164,7 @@ extern "C"
 
         double th_l = angle_between(p1_rest, p3_rest);
         res[0][0] = th_l * deg;
-        mcmule_pass_cut[0] = true;
+        mcmule_pass_cut[0] = (th_l >= mcmule_lower_bounds[0] && th_l <= mcmule_upper_bounds[0]);
 
         if (c < 100)
         {
