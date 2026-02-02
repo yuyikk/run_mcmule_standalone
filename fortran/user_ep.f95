@@ -9,7 +9,7 @@ MODULE USER
     integer, parameter :: nrbins = 750
     real(kind = prec), parameter :: deg = 180. / pi
     integer :: process
-    real(kind = prec) :: e_beam
+    real(kind = prec), parameter :: e_beam = 1101.
 
     real(kind = prec), parameter :: min_val(nrq) = (/0.5/)
     real(kind = prec), parameter :: max_val(nrq) = (/8.0/)
@@ -39,13 +39,10 @@ MODULE USER
     SUBROUTINE INITUSER
         print*, "PRad with electrons"
         print*, " * dipole with Lambda^2 = 0.88 GeV^2"
-        print*, " * electron energy beam E_e = 1100 MeV"
+        print*, " * electron energy beam E_e = 1101 MeV"
         print*, " * angular window: 0.5 < theta_e < 8. deg" 
 
         print*, " * Please enter beam energy (MeV): "
-        read*, e_beam
-        print*, " * running ep-scattering"
-        print*, " * additional cut on photons with E_y > 20 MeV if th(el_f,y)>6 mrad"
         if(which_piece(1:5) == "mp2mp") then
             call initflavour("e-p-", Mel**2 + Mproton**2 + 2 * Mproton * e_beam)
         print*, " * running QED-FF with e^-"
