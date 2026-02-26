@@ -106,7 +106,8 @@ extern "C"
 
         mcmule_protonff_kappa = 2.79284734;
         mcmule_protonff_lambda = 0.88e6; // Lambda^2 in MeV
-                                         // std::cout << "OPENLOOPS DIR: " << __OPENLOOPS_INSTALL_DIR << std::endl;
+        mcmule_musq = Mel * Mel;
+        // std::cout << "OPENLOOPS DIR: " << __OPENLOOPS_INSTALL_DIR << std::endl;
         double s;
         std::cout << "We are running e-p scattering with Ebeam = " << Ebeam << std::endl;
         s = Mel * Mel + Mproton * Mproton + 2 * Mproton * Ebeam;
