@@ -5,7 +5,8 @@
 #include <random>
 #include <iomanip>
 int c = 0;
-const double deg = 180. / M_PI;
+const double pi = 3.14159265358979323846;
+const double deg = 180. / pi;
 extern "C"
 {
     // McMule will calculate this many histograms, cannot be zero but
@@ -15,11 +16,11 @@ extern "C"
     // The number of bins per histogram. All histograms need to have
     // the same number of bins but not all need to be useful. Can be
     // very large.
-    int mcmule_number_bins = 750;
+    int mcmule_number_bins = 7500;
     // This defines the upper and lower bounds of the histograms
     // McMule will compute. Must be set for all histograms requested.
     double mcmule_lower_bounds[1] = {0.5};
-    double mcmule_upper_bounds[1] = {8.};
+    double mcmule_upper_bounds[1] = {8.0};
     // McMule will perform this many extra integrations beyond just
     // phase space etc. Useful for hit-and-miss sampling,
     // non-monochromatic beams, random acceptance etc.
@@ -85,13 +86,16 @@ extern "C"
         return p1[3] * p2[3] - dot3D(p1, p2);
     }
     // These are random values from fitting the Kelly form factor
-    double rational11P = 2.95858e-6;
-    double rational11R = 0.00445253;
+    //double rational11P = 2.95858e-6;
+    //double rational11R = 0.00445253;
 
     void rational11_proton_ff(double *q2, double *Ge, double *Gm)
     {
         // This form factor cannot be used with the TPE calculation!
-        *Ge = (1 + (rational11P - rational11R * rational11R / 6) * *q2) / (1 + rational11P * *q2);
+	double f = 25.68189504e-6;
+	double rational11P = 0.114112 * f;
+        double rational11R = 0.829259;
+        *Ge = (1 + (rational11P - rational11R * rational11R * f / 6) * *q2) / (1 + rational11P * *q2);
         *Gm = 2.79284734 * *Ge;
     }
 
@@ -102,11 +106,11 @@ extern "C"
         // as Geant4
         double Mel = 0.510998950;    // MeV
         double Mproton = 938.272088; // MeV
-        double Ebeam = 1101;        // MeV
+        double Ebeam = 2143;        // MeV
 
         mcmule_protonff_kappa = 2.79284734;
-        mcmule_protonff_lambda = 0.88e6; // Lambda^2 in MeV
-        mcmule_musq = Mel * Mel;
+        mcmule_protonff_lambda = 0.71e6; // Lambda^2 in MeV
+	mcmule_musq = Mel * Mel;
         // std::cout << "OPENLOOPS DIR: " << __OPENLOOPS_INSTALL_DIR << std::endl;
         double s;
         std::cout << "We are running e-p scattering with Ebeam = " << Ebeam << std::endl;
@@ -114,7 +118,8 @@ extern "C"
 
         std::cout << "Using McMule's default dipole form factors" << std::endl;
         std::cout << "with lambda = " << mcmule_protonff_lambda << " and kappa = " << mcmule_protonff_kappa << std::endl;
-        mcmule_protonff = __nucl_protonff_MOD_proton_dipole;
+        //mcmule_protonff = &__nucl_protonff_MOD_proton_dipole;
+        mcmule_protonff = &rational11_proton_ff;
 
         if (!mcmule_protonff)
         {
@@ -122,7 +127,7 @@ extern "C"
         }
 
         std::cout << "==>> Initialization of McMule...";
-        mcmule_initflavour("e-p-", &s);
+        mcmule_initflavour("e-p", &s);
         std::cout << "Done." << std::endl;
     }
 
@@ -153,23 +158,30 @@ extern "C"
         // perform a boost into the rest-frame of p2
 
         // std::cout << "Boosting to lab frame done" << std::endl;
-        double p1_rest[4] = {p1[0], p1[1], p1[2], p1[3]};
-        double p2_rest[4] = {p2[0], p2[1], p2[2], p2[3]};
-        double p3_rest[4] = {p3[0], p3[1], p3[2], p3[3]};
-        double p4_rest[4] = {p4[0], p4[1], p4[2], p4[3]};
+        /*double p1[4] = {p1[0], p1[1], p1[2], p1[3]};
+        double p2[4] = {p2[0], p2[1], p2[2], p2[3]};
+        double p3[4] = {p3[0], p3[1], p3[2], p3[3]};
+        double p4[4] = {p4[0], p4[1], p4[2], p4[3]};
+*/
+        boost_rf(p2, p1);
+	//boost_rf(p2, p2);
+        boost_rf(p2, p3);
+        boost_rf(p2, p4);
 
-        boost_rf(p2, p1_rest);
-        boost_rf(p2, p2_rest);
-        boost_rf(p2, p3_rest);
-        boost_rf(p2, p4_rest);
+        MCMULE_SET_NAME(0, "th_rec");
+	double z_unit[4] = {0, 0, 1, 1};
+        double th_l = angle_between(p1, p3) * deg;
+        res[0][0] = th_l;
+	if (th_l < mcmule_lower_bounds[0] || th_l > mcmule_upper_bounds[0])
+	{
+		mcmule_pass_cut[0] = false;
+	}
+	else
+	{
+		mcmule_pass_cut[0] = true;
+	}
 
-        MCMULE_SET_NAME(0, "th_l");
-
-        double th_l = angle_between(p1_rest, p3_rest);
-        res[0][0] = th_l * deg;
-        mcmule_pass_cut[0] = (th_l >= mcmule_lower_bounds[0] && th_l <= mcmule_upper_bounds[0]);
-
-        if (c < 100)
+        if (c < 100 && mcmule_pass_cut[0])
         {
             if (c == 0)
             {
@@ -180,19 +192,18 @@ extern "C"
                           << std::setw(12) << "E"
                           << std::setw(12) << "M" << std::endl;
             }
-
-            std::cout << std::left << std::setw(5) << "p1: " << std::setw(12) << p1_rest[0]
-                      << std::setw(12) << p1_rest[1] << std::setw(12) << p1_rest[2]
-                      << std::setw(12) << p1_rest[3] << std::setw(12) << std::sqrt(dot4D(p1_rest, p1_rest)) << std::endl;
-            std::cout << std::left << std::setw(5) << "p2: " << std::setw(12) << p2_rest[0]
-                      << std::setw(12) << p2_rest[1] << std::setw(12) << p2_rest[2]
-                      << std::setw(12) << p2_rest[3] << std::setw(12) << std::sqrt(dot4D(p2_rest, p2_rest)) << std::endl;
-            std::cout << std::left << std::setw(5) << "p3: " << std::setw(12) << p3_rest[0]
-                      << std::setw(12) << p3_rest[1] << std::setw(12) << p3_rest[2]
-                      << std::setw(12) << p3_rest[3] << std::setw(12) << std::sqrt(dot4D(p3_rest, p3_rest)) << std::endl;
-            std::cout << std::left << std::setw(5) << "p4: " << std::setw(12) << p4_rest[0]
-                      << std::setw(12) << p4_rest[1] << std::setw(12) << p4_rest[2]
-                      << std::setw(12) << p4_rest[3] << std::setw(12) << std::sqrt(dot4D(p4_rest, p4_rest)) << std::endl;
+            std::cout << std::left << std::setw(5) << "p1: " << std::setw(12) << p1[0]
+                      << std::setw(12) << p1[1] << std::setw(12) << p1[2]
+                      << std::setw(12) << p1[3] << std::setw(12) << std::sqrt(dot4D(p1, p1)) << std::endl;
+            std::cout << std::left << std::setw(5) << "p2: " << std::setw(12) << p2[0]
+                      << std::setw(12) << p2[1] << std::setw(12) << p2[2]
+                      << std::setw(12) << p2[3] << std::setw(12) << std::sqrt(dot4D(p2, p2)) << std::endl;
+            std::cout << std::left << std::setw(5) << "p3: " << std::setw(12) << p3[0]
+                      << std::setw(12) << p3[1] << std::setw(12) << p3[2]
+                      << std::setw(12) << p3[3] << std::setw(12) << std::sqrt(dot4D(p3, p3)) << std::endl;
+            std::cout << std::left << std::setw(5) << "p4: " << std::setw(12) << p4[0]
+                      << std::setw(12) << p4[1] << std::setw(12) << p4[2]
+                      << std::setw(12) << p4[3] << std::setw(12) << std::sqrt(dot4D(p4, p4)) << std::endl;
             std::cout << std::left << std::setw(15) << "theta_mc: " << std::setw(12) << th_l << std::endl;
             std::cout << "== == == == == == == == == == == == == == == == == == ==" << std::endl;
             c++;
