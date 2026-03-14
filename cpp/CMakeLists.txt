@@ -33,7 +33,7 @@ find_package(ROOT REQUIRED)
 # Find Source and Header Files
 #----------------------------------------------------------------------------
 
-file(GLOB USER_HEADERS "*.h")
+file(GLOB USER_HEADERS "*.h" "*.f95")
 # set (USER_EE_SOURCE "user_ee.cpp")
 set (USER_EP_SOURCE "user_ep.cpp")
 set (USER_EP_TEST "user_ep_test.cpp")
