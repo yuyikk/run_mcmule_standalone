@@ -4,6 +4,7 @@
 #include <string>
 #include <iomanip>
 #include <chrono>
+#include <iostream>
 using namespace std::chrono;
 auto now = system_clock::now();
 auto timestamp = duration_cast<seconds>(now.time_since_epoch()).count();
@@ -186,9 +187,9 @@ extern "C"
             std::cout << "Invalid form factor" << std::endl;
         }
 
-        G4cout << "==>> Initialization of McMule...";
+        // G4cout << "==>> Initialization of McMule...";
         mcmule_initflavour("e-p", &s);
-        G4cout << "Done." << G4endl;
+        // G4cout << "Done." << G4endl;
     }
 
     void boost_rf(double *rec, double *mo1)
@@ -273,7 +274,7 @@ extern "C"
         // integral
         //    \int d\sigma -> \int d\simga * mcmule_userweight
 
-        mcmule_userweight = 1. / artificial_eff;
+        mcmule_userweight = 1.;
     }
 };
 
@@ -335,21 +336,21 @@ extern "C"
 //         c++;
 //     }
 // }
-void PrintConfiguration()
-{
-    std::cout << "  NUM_OF_HIST: " << mcmule_number_hist << std::endl;
-    std::cout << "  NUM_OF_BINS: " << mcmule_number_bins << std::endl;
-    std::cout << "  HIST_LOWER_BOUNDS: ";
-    for (int i = 0; i < mcmule_number_hist; ++i)
-    {
-        std::cout << std::left << std::setw(5) << mcmule_lower_bounds[i];
-    }
-    std::cout << std::endl;
-    std::cout << "  HIST_UPPER_BOUNDS: ";
-    for (int i = 0; i < mcmule_number_hist; ++i)
-    {
-        std::cout << std::left << std::setw(5) << mcmule_upper_bounds[i];
-    }
-    std::cout << std::endl;
-    std::cout << "  ARTIFICIAL_EFF: " << artificial_eff << std::endl;
-}
+// void PrintConfiguration()
+// {
+//     std::cout << "  NUM_OF_HIST: " << mcmule_number_hist << std::endl;
+//     std::cout << "  NUM_OF_BINS: " << mcmule_number_bins << std::endl;
+//     std::cout << "  HIST_LOWER_BOUNDS: ";
+//     for (int i = 0; i < mcmule_number_hist; ++i)
+//     {
+//         std::cout << std::left << std::setw(5) << mcmule_lower_bounds[i];
+//     }
+//     std::cout << std::endl;
+//     std::cout << "  HIST_UPPER_BOUNDS: ";
+//     for (int i = 0; i < mcmule_number_hist; ++i)
+//     {
+//         std::cout << std::left << std::setw(5) << mcmule_upper_bounds[i];
+//     }
+//     std::cout << std::endl;
+//     std::cout << "  ARTIFICIAL_EFF: " << artificial_eff << std::endl;
+// }
