@@ -112,6 +112,7 @@ extern "C"
         // This form factor cannot be used with the TPE calculation!
         // The unit of charge radius is fm, therefore the parameters should be converted into MeV^-2.
         // The variable 'factor' does such conversion.
+        std::cout << rational11P << "\t" << rational11R << std::endl;
         *Ge = (1 + (rational11P * factor - rational11R * rational11R * factor / 6) * *q2) / (1 + rational11P * factor * *q2);
         *Gm = 2.79284734 * *Ge;
     }
@@ -131,7 +132,7 @@ extern "C"
         double Mel = 0.510998950;    // MeV
         double Mproton = 938.272088; // MeV
 
-        double Ebeam = 2143;
+        double Ebeam = 1100;
 
         mcmule_protonff_kappa = 2.79284734;
         mcmule_protonff_lambda = 0.71e6; // Lambda^2 in MeV
@@ -237,7 +238,7 @@ extern "C"
             mcmule_pass_cut[0] = true;
         }
 
-        if (c < 100 && mcmule_pass_cut[0])
+        if (c < 10 && mcmule_pass_cut[0])
         {
             if (c == 0)
             {

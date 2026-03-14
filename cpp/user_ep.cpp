@@ -86,15 +86,16 @@ extern "C"
         return p1[3] * p2[3] - dot3D(p1, p2);
     }
     // These are random values from fitting the Kelly form factor
-    //double rational11P = 2.95858e-6;
-    //double rational11R = 0.00445253;
+    // double rational11P = 2.95858e-6;
+    // double rational11R = 0.00445253;
 
     void rational11_proton_ff(double *q2, double *Ge, double *Gm)
     {
         // This form factor cannot be used with the TPE calculation!
-	double f = 25.68189504e-6;
-	double rational11P = 0.114112 * f;
+        double f = 25.68189504e-6;
+        double rational11P = 0.114112 * f;
         double rational11R = 0.829259;
+        std::cout << rational11P / f << "\t" << rational11R << std::endl;
         *Ge = (1 + (rational11P - rational11R * rational11R * f / 6) * *q2) / (1 + rational11P * *q2);
         *Gm = 2.79284734 * *Ge;
     }
@@ -106,11 +107,11 @@ extern "C"
         // as Geant4
         double Mel = 0.510998950;    // MeV
         double Mproton = 938.272088; // MeV
-        double Ebeam = 2143;        // MeV
+        double Ebeam = 1100;         // MeV
 
         mcmule_protonff_kappa = 2.79284734;
         mcmule_protonff_lambda = 0.71e6; // Lambda^2 in MeV
-	mcmule_musq = Mel * Mel;
+        mcmule_musq = Mel * Mel;
         // std::cout << "OPENLOOPS DIR: " << __OPENLOOPS_INSTALL_DIR << std::endl;
         double s;
         std::cout << "We are running e-p scattering with Ebeam = " << Ebeam << std::endl;
@@ -118,7 +119,7 @@ extern "C"
 
         std::cout << "Using McMule's default dipole form factors" << std::endl;
         std::cout << "with lambda = " << mcmule_protonff_lambda << " and kappa = " << mcmule_protonff_kappa << std::endl;
-        //mcmule_protonff = &__nucl_protonff_MOD_proton_dipole;
+        // mcmule_protonff = &__nucl_protonff_MOD_proton_dipole;
         mcmule_protonff = &rational11_proton_ff;
 
         if (!mcmule_protonff)
@@ -164,24 +165,24 @@ extern "C"
         double p4[4] = {p4[0], p4[1], p4[2], p4[3]};
 */
         boost_rf(p2, p1);
-	//boost_rf(p2, p2);
+        // boost_rf(p2, p2);
         boost_rf(p2, p3);
         boost_rf(p2, p4);
 
         MCMULE_SET_NAME(0, "th_rec");
-	double z_unit[4] = {0, 0, 1, 1};
+        double z_unit[4] = {0, 0, 1, 1};
         double th_l = angle_between(p1, p3) * deg;
         res[0][0] = th_l;
-	if (th_l < mcmule_lower_bounds[0] || th_l > mcmule_upper_bounds[0])
-	{
-		mcmule_pass_cut[0] = false;
-	}
-	else
-	{
-		mcmule_pass_cut[0] = true;
-	}
+        if (th_l < mcmule_lower_bounds[0] || th_l > mcmule_upper_bounds[0])
+        {
+            mcmule_pass_cut[0] = false;
+        }
+        else
+        {
+            mcmule_pass_cut[0] = true;
+        }
 
-        if (c < 100 && mcmule_pass_cut[0])
+        if (c < 10 && mcmule_pass_cut[0])
         {
             if (c == 0)
             {
