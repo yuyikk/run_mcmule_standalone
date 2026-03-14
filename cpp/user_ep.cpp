@@ -95,7 +95,7 @@ extern "C"
         double f = 25.68189504e-6;
         double rational11P = 0.114112 * f;
         double rational11R = 0.829259;
-        std::cout << rational11P / f << "\t" << rational11R << std::endl;
+        std::cout << rational11P / f << "\t" << rational11R << "\t" << f << std::endl;
         *Ge = (1 + (rational11P - rational11R * rational11R * f / 6) * *q2) / (1 + rational11P * *q2);
         *Gm = 2.79284734 * *Ge;
     }

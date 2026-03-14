@@ -112,7 +112,7 @@ extern "C"
         // This form factor cannot be used with the TPE calculation!
         // The unit of charge radius is fm, therefore the parameters should be converted into MeV^-2.
         // The variable 'factor' does such conversion.
-        std::cout << rational11P << "\t" << rational11R << std::endl;
+        std::cout << rational11P << "\t" << rational11R << "\t" << factor << std::endl;
         *Ge = (1 + (rational11P * factor - rational11R * rational11R * factor / 6) * *q2) / (1 + rational11P * factor * *q2);
         *Gm = 2.79284734 * *Ge;
     }
@@ -143,7 +143,7 @@ extern "C"
         {
             std::cerr << "We are running Moller scattering with Ebeam (MeV) = " << Ebeam << std::endl;
             s = 2 * Mel * Mel + 2 * Mel * Ebeam;
-            mcmule_number_hist = 2;
+            // mcmule_number_hist = 2;
         }
         else if (__global_def_MOD_which_piece[1] == 'p')
         {
